@@ -1,16 +1,22 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Recycle } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Recycle } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -20,25 +26,53 @@ export default function SignupPage() {
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
-    // Simulate signup process
+    // 1. Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match.");
+      setIsLoading(false);
+      return;
+    }
+
+    // 2. Simulate saving user to localStorage
     setTimeout(() => {
-      setIsLoading(false)
-      // Redirect to dashboard on successful signup
-      router.push("/dashboard")
-    }, 1000)
-  }
+      const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+      const emailExists = existingUsers.find(
+        (u: any) => u.email === formData.email
+      );
+
+      if (emailExists) {
+        alert("Email already exists.");
+        setIsLoading(false);
+        return;
+      }
+
+      const newUser = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      };
+
+      localStorage.setItem(
+        "users",
+        JSON.stringify([...existingUsers, newUser])
+      );
+      setIsLoading(false);
+      router.push("/login");
+    }, 1000);
+  };
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center p-4">
@@ -49,7 +83,9 @@ export default function SignupPage() {
             <span className="text-2xl font-bold text-gray-900">ReWear</span>
           </div>
           <CardTitle className="text-2xl">Join ReWear</CardTitle>
-          <CardDescription>Create your account and start your sustainable fashion journey</CardDescription>
+          <CardDescription>
+            Create your account and start your sustainable fashion journey
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,7 +96,9 @@ export default function SignupPage() {
                   id="firstName"
                   placeholder="John"
                   value={formData.firstName}
-                  onChange={(e) => handleInputChange("firstName", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("firstName", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -70,7 +108,9 @@ export default function SignupPage() {
                   id="lastName"
                   placeholder="Doe"
                   value={formData.lastName}
-                  onChange={(e) => handleInputChange("lastName", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("lastName", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -104,7 +144,9 @@ export default function SignupPage() {
                 type="password"
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
-                onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("confirmPassword", e.target.value)
+                }
                 required
               />
             </div>
@@ -112,7 +154,9 @@ export default function SignupPage() {
               <Checkbox
                 id="terms"
                 checked={formData.agreeToTerms}
-                onCheckedChange={(checked) => handleInputChange("agreeToTerms", checked as boolean)}
+                onCheckedChange={(checked) =>
+                  handleInputChange("agreeToTerms", checked as boolean)
+                }
               />
               <Label htmlFor="terms" className="text-sm">
                 I agree to the{" "}
@@ -120,7 +164,10 @@ export default function SignupPage() {
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-green-600 hover:underline">
+                <Link
+                  href="/privacy"
+                  className="text-green-600 hover:underline"
+                >
                   Privacy Policy
                 </Link>
               </Label>
@@ -137,7 +184,10 @@ export default function SignupPage() {
           <div className="mt-6 text-center">
             <span className="text-sm text-gray-600">
               Already have an account?{" "}
-              <Link href="/login" className="text-green-600 hover:underline font-medium">
+              <Link
+                href="/login"
+                className="text-green-600 hover:underline font-medium"
+              >
                 Sign in
               </Link>
             </span>
@@ -145,5 +195,5 @@ export default function SignupPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
