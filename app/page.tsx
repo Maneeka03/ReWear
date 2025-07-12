@@ -281,9 +281,7 @@ export default function LandingPage() {
 
         <div className="container mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center min-h-[500px] sm:min-h-[600px] lg:min-h-[700px]">
-            {/* Left Side - Hero Content */}
-            <div className="space-y-4 sm:space-y-6 lg:space-y-8 order-2 lg:order-1">
-              {/* Animated Main Headlines */}
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8 order-2 lg:order-1 pl-5 mb-[100px]">
               <div className="space-y-2 sm:space-y-4 mb-{200}">
                 <div className="h-16 sm:h-20 md:h-24 lg:h-32 flex items-center">
                   <h1
