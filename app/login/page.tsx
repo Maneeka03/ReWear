@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [isVisible, setIsVisible] = useState(false);
 
@@ -33,10 +34,21 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login process
     setTimeout(() => {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const matchedUser = users.find(
+        (user: any) => user.email === email && user.password === password
+      );
+
+      if (!matchedUser) {
+        alert("Invalid email or password");
+        setIsLoading(false);
+        return;
+      }
+
+      // Save session
+      localStorage.setItem("currentUser", JSON.stringify(matchedUser));
       setIsLoading(false);
-      // Redirect to dashboard on successful login
       router.push("/dashboard");
     }, 1000);
   };
